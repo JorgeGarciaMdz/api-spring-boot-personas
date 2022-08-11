@@ -1,0 +1,30 @@
+version: "2.0"
+
+services: 
+
+  maria_db:
+    container_name: mariadb-sicos
+    image: mariadb
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: sicos
+      MARIADB_USER: jorge
+      MARIADB_PASSWORD: jorge
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+    ports:
+     - "3306:3306"
+
+
+  server-spring:
+    container_name: "server-spring"
+    build: ./
+    depends_on: 
+      - maria_db
+    links: 
+      - maria_db
+    ports:
+      - 8080:8080
+
